@@ -50,6 +50,7 @@ const UploadVideoToS3WithNativeSdk = () => {
         const fileExt = file.name.split('.').pop();
         const fileName = `${Math.random()}.${fileExt}`;
         const filePath = `${fileName}`;
+        
         console.log("video tak aa gye hai")
 
         try {
