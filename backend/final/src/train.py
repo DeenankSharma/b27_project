@@ -21,7 +21,7 @@ class CelebDFDataset(torch.utils.data.Dataset):
         return video_tensor, label
 
 # Create a list of video paths and their labels
-data_folder = '../Celeb-DF/'
+data_folder = '../Celeb-DF-v2/'
 real_video_paths = get_video_paths(os.path.join(data_folder, 'Celeb-real')) + get_video_paths(os.path.join(data_folder, 'YouTube-real'))
 synthesized_video_paths = get_video_paths(os.path.join(data_folder, 'Celeb-synthesis'))
 

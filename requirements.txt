@@ -1,0 +1,7 @@
+distro==1.8.0
+greenlet==2.0.2
+msgpack==1.0.3
+psutil==5.9.4
+pynvim==0.4.2
+six==1.16.0
+urwid==2.1.2
