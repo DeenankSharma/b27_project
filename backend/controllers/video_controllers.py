@@ -38,6 +38,7 @@ def video_url():
     title = data.get('title')
     imageUrl = data.get('imageUrl')
     videoUrl = data.get('videoUrl')
+    date = data.get('date')
     token = request.cookies.get('token')
     decoded_token = jwt.decode(token, config['token_secret'],algorithms=['HS256'])
     user_dictionary = decoded_token.get('user')
@@ -47,7 +48,8 @@ def video_url():
         "email" :email,
         "title":title,
         "imageUrl":imageUrl,
-        "videoUrl":videoUrl
+        "videoUrl":videoUrl,
+        "date":date
     }
     user_data = {
         "email":email,
@@ -58,9 +60,11 @@ def video_url():
     video_ref.document(id).set(video_struct)
     print("ye lo tumhare upload signed video function ke arguments",user_data,videoUrl)
     add_noise_to_video(videoUrl)
-    upload_signed_video(user_data,videoUrl)
-    return jsonify({"status": "success", "message": "Data received and uploaded"}), 200
-
+    already_uploaded = upload_signed_video(user_data,videoUrl)
+    if already_uploaded == True:
+        return jsonify({"status": "failure", "message": "Video already uploaded"}), 200
+    elif already_uploaded == False:
+        return jsonify({"status": "success", "message": "Data received and uploaded"}), 200
 
 def video_fetch_url():
     logger.info("Entering video_fetch_url function")
@@ -131,19 +135,30 @@ def test_video():
     id = str(uuid.uuid4())
     video_ref = video_url_to_firestore()
     video_ref.document(id).set(video_struct)
-    signature_verification_result,original_video_url=verify_signed_video(videoUrl)
-    signedUrl=upload_to_google_bucket(videoUrl)
-    print("ye lo tumhari signedUrl",signedUrl)
-    audio_analysis_report,similarity_percentage=audio_analysis(videoUrl,original_video_url)
-    tampering_detection_result=detect_potential_tampering(signedUrl)
-    video_intelligence_report=generate_report(tampering_detection_result)
-    message = {
-        'Signature verification result': signature_verification_result,
-        'Tampering detection result': video_intelligence_report,
-        'Audio analysis result':audio_analysis_report,
-        'Audio similarity percentage':similarity_percentage
-    }
-    return jsonify({"status": "success", "message": message}), 200
+    signature_verification_result,original_video_url,is_video=verify_signed_video(videoUrl)
+    if is_video:
+        signedUrl=upload_to_google_bucket(videoUrl)
+        print("ye lo tumhari signedUrl",signedUrl)
+        audio_analysis_report,similarity_percentage=audio_analysis(videoUrl,original_video_url)
+        tampering_detection_result=detect_potential_tampering(signedUrl)
+        video_intelligence_report=generate_report(tampering_detection_result)
+        message = {
+            'Signature verification result': signature_verification_result,
+            'Tampering detection result': video_intelligence_report,
+            'Audio analysis result':audio_analysis_report,
+            'Audio similarity percentage':similarity_percentage
+        }
+        return jsonify({"status": "success", "message": message,"is_video":True}), 200
+    elif not is_video:
+        signedUrl=upload_to_google_bucket(videoUrl)
+        print("ye lo tumhari signedUrl",signedUrl)
+        tampering_detection_result=detect_potential_tampering(signedUrl)
+        video_intelligence_report=generate_report(tampering_detection_result)
+        message = {
+            'Signature verification result': signature_verification_result,
+            'Tampering detection result': video_intelligence_report,
+        }
+        return jsonify({"status": "success", "message": message,"is_video":False}), 200
 
 def delete_video():
     data = request.json

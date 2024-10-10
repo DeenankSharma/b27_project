@@ -8,6 +8,7 @@ interface VideoUrl {
   title: string;
   imageUrl: string;
   videoUrl: string;
+  date:string;
 }
 
 const VideosFetch: React.FC = () => {
@@ -23,6 +24,91 @@ const VideosFetch: React.FC = () => {
       console.error("Error fetching video URLs:", err);
     }
   };
+  // useEffect(()=>{
+  //   setUrls([
+  //     {
+  //       id: "1",
+  //       email: "user1@example.com",
+  //       title: "Beautiful Sunset Time Lapse",
+  //       imageUrl: "https://images.unsplash.com/photo-1616832880699-8541b04005ec?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3Vuc2V0JTIwdGltZWxhcHNlfGVufDB8fDB8fHww",
+  //       videoUrl: "https://player.vimeo.com/external/314181352.sd.mp4?s=9f9d84c323ec55b23e2858e3452d119f1679beaa&profile_id=164&oauth2_token_id=57447761",
+  //       date : '10 - 10 - 2024'
+  //     },
+  //     {
+  //       id: "2",
+  //       email: "user2@example.com",
+  //       title: "Aerial View of Beach",
+  //       imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YmVhY2h8ZW58MHx8MHx8fDA%3D",
+  //       videoUrl: "https://player.vimeo.com/external/434045526.sd.mp4?s=c27eecc69a27dbc4ff2b87d38afc35f1a9e7c02d&profile_id=164&oauth2_token_id=57447761",
+  //       date : '10 - 10 - 2024'
+  //     },
+  //     {
+  //       id: "3",
+  //       email: "user3@example.com",
+  //       title: "City Traffic at Night",
+  //       imageUrl: "https://images.unsplash.com/photo-1506868544459-7f2e136d1d91?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y2l0eSUyMG5pZ2h0fGVufDB8fDB8fHww",
+  //       videoUrl: "https://player.vimeo.com/external/342571552.hd.mp4?s=6aa6f164de3812abadff3dde86d19f7a074a8a66&profile_id=175&oauth2_token_id=57447761",
+  //       date : '10 - 10 - 2024'
+  //     },
+  //     {
+  //       id: "4",
+  //       email: "user4@example.com",
+  //       title: "Waves Crashing on Rocky Shore",
+  //       imageUrl: "https://images.unsplash.com/photo-1619806640513-a68a83a8614e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8d2F2ZXMlMjBjcmFzaGluZ3xlbnwwfHwwfHx8MA%3D%3D",
+  //       videoUrl: "https://player.vimeo.com/external/332588783.hd.mp4?s=a3620eb7ff73a2bef5e8fae7a451514ad1305e49&profile_id=175&oauth2_token_id=57447761",
+  //       date : '10 - 10 - 2024'
+  //     },
+  //     {
+  //       id: "5",
+  //       email: "user5@example.com",
+  //       title: "Vibrant Northern Lights",
+  //       imageUrl: "https://images.unsplash.com/photo-1563974318767-a4de855d7b43?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bm9ydGhlcm4lMjBsaWdodHN8ZW58MHx8MHx8fDA%3D",
+  //       videoUrl: "https://player.vimeo.com/external/236075858.hd.mp4?s=539faad12f040eb5afd8de3160db1220f1a35b3d&profile_id=175&oauth2_token_id=57447761",
+  //       date : '10 - 10 - 2024'
+  //     },
+  //     {
+  //       id: "6",
+  //       email: "user6@example.com",
+  //       title: "Serene Forest Stream",
+  //       imageUrl: "https://images.unsplash.com/photo-1421789665209-c9b2a435e3dc?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9yZXN0JTIwc3RyZWFtfGVufDB8fDB8fHww",
+  //       videoUrl: "https://player.vimeo.com/external/189545487.sd.mp4?s=8cd2af1ec08f7ce121a5a6a09c78c05237943524&profile_id=164&oauth2_token_id=57447761",
+  //       date : '10 - 10 - 2024'
+  //     },
+  //     {
+  //       id: "7",
+  //       email: "user5@example.com",
+  //       title: "Vibrant Northern Lights",
+  //       imageUrl: "https://images.unsplash.com/photo-1563974318767-a4de855d7b43?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bm9ydGhlcm4lMjBsaWdodHN8ZW58MHx8MHx8fDA%3D",
+  //       videoUrl: "https://player.vimeo.com/external/236075858.hd.mp4?s=539faad12f040eb5afd8de3160db1220f1a35b3d&profile_id=175&oauth2_token_id=57447761",
+  //       date : '10 - 10 - 2024'
+  //     },
+  //     {
+  //       id: "8",
+  //       email: "user6@example.com",
+  //       title: "Serene Forest Stream",
+  //       imageUrl: "https://images.unsplash.com/photo-1421789665209-c9b2a435e3dc?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9yZXN0JTIwc3RyZWFtfGVufDB8fDB8fHww",
+  //       videoUrl: "https://player.vimeo.com/external/189545487.sd.mp4?s=8cd2af1ec08f7ce121a5a6a09c78c05237943524&profile_id=164&oauth2_token_id=57447761",
+  //       date : '10 - 10 - 2024'
+  //     },
+  //     {
+  //       id: "9",
+  //       email: "user5@example.com",
+  //       title: "Vibrant Northern Lights",
+  //       imageUrl: "https://images.unsplash.com/photo-1563974318767-a4de855d7b43?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bm9ydGhlcm4lMjBsaWdodHN8ZW58MHx8MHx8fDA%3D",
+  //       videoUrl: "https://player.vimeo.com/external/236075858.hd.mp4?s=539faad12f040eb5afd8de3160db1220f1a35b3d&profile_id=175&oauth2_token_id=57447761",
+  //       date : '10 - 10 - 2024'
+  //     },
+  //     {
+  //       id: "10",
+  //       email: "user6@example.com",
+  //       title: "Serene Forest Stream",
+  //       imageUrl: "https://images.unsplash.com/photo-1421789665209-c9b2a435e3dc?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9yZXN0JTIwc3RyZWFtfGVufDB8fDB8fHww",
+  //       videoUrl: "https://player.vimeo.com/external/189545487.sd.mp4?s=8cd2af1ec08f7ce121a5a6a09c78c05237943524&profile_id=164&oauth2_token_id=57447761",
+  //       date : '10 - 10 - 2024'
+  //     }
+  //   ])
+  // },[])
+  
 
   useEffect(()=>{
     get_video_urls()
@@ -76,6 +162,7 @@ const VideosFetch: React.FC = () => {
               >
                 Play
               </button>
+              <h3 style={styles.cardTitle}>{video.date}</h3>
             </div>
           </div>
         ))}
@@ -86,6 +173,10 @@ const VideosFetch: React.FC = () => {
 
 const styles = {
   container: {
+    position: 'absolute' as const,
+    right:0,
+    top:0,
+    left:250,
     display: 'flex',
     flexDirection: 'column' as const,
     alignItems: 'center',
@@ -94,7 +185,7 @@ const styles = {
     borderRadius: '15px',
     boxShadow: '0 0 10px 5px rgba(0, 237, 100, 0.3)',
     backdropFilter: 'blur(5px)',
-    maxWidth: '1200px',
+    maxWidth: '1150px',
     margin: '0 auto',
   },
   grid: {

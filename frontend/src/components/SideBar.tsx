@@ -25,6 +25,7 @@ export default function StyledDrawer() {
         boxShadow: '0 0 10px 5px rgba(0, 237, 100, 0.3)',
         display: 'flex',
         flexDirection: 'column',
+        // position:'fixed' as const
       }} 
       role="presentation"
     >

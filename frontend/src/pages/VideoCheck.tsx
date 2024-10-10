@@ -31,7 +31,6 @@ const VideoCheck: React.FC = () => {
   const [progress, setProgress] = useState(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [videoUrl, setVideoUrl] = useState<string>("");
-  // const [signedUrl, setSignedUrl] = useState<string>("");
   const [isSubmitValid, setIsSubmitValid] = useState<boolean>(false);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
