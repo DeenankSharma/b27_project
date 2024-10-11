@@ -13,6 +13,8 @@ from supabase import create_client,Client
 import subprocess
 from dotenv import load_dotenv
 import zlib
+
+from invisible_watermarking.watermark_ocr import extract_watermark_from_video, read_text_from_image
 load_dotenv()
 
 supabase_url = os.environ['SUPABASE_URL']
@@ -22,7 +24,7 @@ client:Client = create_client(supabase_url, supabase_anon_key)
 base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 print(base_dir)
 sys.path.append(base_dir)
-from backend.firestore_connection.firestore import connect_signature_database
+from backend.firestore_connection.firestore import connect_signature_database, video_url_to_firestore
 
 def generate_key():
     private_key = rsa.generate_private_key(
@@ -63,7 +65,7 @@ def generate_key():
 #     cap.release()
 #     return frames
 
-def frame_capture(path: str) -> List:
+def frame_capture(path: str):
     """
     Captures frames from a video file at intervals based on the video's frames per second (FPS).
     
@@ -76,7 +78,7 @@ def frame_capture(path: str) -> List:
     cap = cv2.VideoCapture(path)
     fps = cap.get(cv2.CAP_PROP_FPS)
     frame_interval = int(fps)
-    frames: List = []
+    frames: list = []
     frame_idx = 0
 
     while True:
@@ -218,7 +220,7 @@ def download_video(url, local_path):
     with open(local_path, 'wb') as file:
         file.write(response.content)
 
-def upload_signed_video(user_data,video_url):
+def upload_signed_video(user_data,video_url,code):
     local_video_path = 'local_video_sign.mkv'
     output_video_path='output_video_sign.mkv'
     split_url=video_url.split("/")
@@ -236,7 +238,8 @@ def upload_signed_video(user_data,video_url):
     "public_pem":public_pem,
     "signature":signature,
     "combined_data":combined_data,
-    "video_url":video_url
+    "video_url":video_url,
+    "code":code
     }
     query = signature_ref.where('signature', '==', signature)
     docs = query.stream()
@@ -253,42 +256,52 @@ def upload_signed_video(user_data,video_url):
         update_video_on_supabase(output_video_path,remote_file)
         # os.remove(local_video_path)
         os.remove(output_video_path)
-        return {'already_uploaded':False}
+        return False
     elif len(results) != 0:
-        return {'already_uploaded':True}
+        return True
 
 def verify_signed_video(video_url):
     local_video_path='local_video_check.mkv'
     download_video(video_url, local_video_path)
-    public_key, signature = extract_signature_and_public_key(local_video_path)
     metadata = extract_metadata(local_video_path)
     frames = frame_capture(local_video_path)
-    user_data, original_video_url, metadata_original = get_user_and_video_data(signature)
-    # Check if it's a short clip
-    is_short_clip = metadata['tags']['DURATION'] < metadata_original['tags']['DURATION']
-    if is_short_clip:
-        signature_verification_result = verify_shorts(local_video_path, public_key, signature, user_data, metadata, metadata_original)
-        is_video = False
-    else:
-        
+    result = verify_shorts(local_video_path,metadata)
+    if result=="Watermark verification successful: Full video found" or result== "Watermark verification failed: No watermark found.":
+        public_key, signature = extract_signature_and_public_key(local_video_path)
+        user_data, original_video_url, metadata_original = get_user_and_video_data(signature)
         metadata['start_pts'] = metadata_original['start_pts']
         metadata['start_time'] = metadata_original['start_time']
         metadata['tags']['DURATION'] = metadata_original['tags']['DURATION']
         signature_verification_result = verify_signature(user_data, metadata, frames, signature, public_key, metadata_original)
         is_video = True
-    os.remove(local_video_path)
-    return signature_verification_result, original_video_url, is_video, frames
-def verify_shorts(local_video_path, public_key, signature, user_data, metadata, metadata_original):
-    watermark = extract_watermark(local_video_path)
-    is_signature_valid = verify_watermark_signature(watermark, signature, public_key)
-    is_metadata_consistent = check_metadata_consistency(metadata, metadata_original)
-    verification_result = {
-        "signature_valid": is_signature_valid,
-        "metadata_consistent": is_metadata_consistent,
-        "overall_result": is_signature_valid and is_metadata_consistent
-    }
-    return verification_result
+    elif result=="Watermark verification successful: Trimmed video clip detected.":
+        signature_verification_result= "We cannot perform signature verification on trimmed clips."
+        is_video=False
 
+    os.remove(local_video_path)
+    return result,signature_verification_result, original_video_url, is_video, frames
+
+def verify_shorts(local_video_path, metadata):
+    watermark = extract_watermark(local_video_path)
+    print("ye watermark extract ho rha hai",watermark)
+    signature_ref = connect_signature_database()
+    query = signature_ref.where('code', '==', watermark)
+    docs = query.stream()
+    results = []
+    for doc in docs:
+        data = doc.to_dict()
+        results.append({
+            'combined_data':data.get('combined_data'),
+        })
+    if(len(results)>0):
+        metadata_original=json.loads(results[0]['combined_data'])['metadata']
+        is_short_clip = metadata['tags']['DURATION'] < metadata_original['tags']['DURATION']
+        if(is_short_clip):
+            return "Watermark verification successful: Trimmed video clip detected."
+        else:
+            return "Watermark verification successful: Full video found."
+    else:
+        return "Watermark verification failed: No watermark found."
 
 def convert_mp4_to_mkv(video_url,input_file, output_file):
     download_video(video_url,input_file)
@@ -317,3 +330,11 @@ def get_user_and_video_data(signature):
     print("ye rha tumhara user_data aur video_url",user_data,video_url)
     return user_data,video_url,metadata
 
+def extract_watermark(local_video_path):
+    image_name = "0.jpg"
+    extract_watermark_from_video(local_video_path,duration=5)
+    extracted_text = read_text_from_image(image_name)
+    return extracted_text
+
+    
+    

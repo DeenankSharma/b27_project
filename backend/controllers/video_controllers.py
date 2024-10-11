@@ -1,3 +1,5 @@
+import cv2
+import ffmpeg
 from flask import jsonify,request,make_response
 import os
 from dotenv import load_dotenv
@@ -6,11 +8,12 @@ import jwt
 import requests
 import uuid
 import time
-from backend.audio_analysis.aud import add_noise_to_audio, extract_audio, plot_audio_waveforms, replace_audio_in_video
-from backend.audio_analysis.audio_to_gemini_api import compare_transcript
-from backend.audio_analysis.convert import stereo_to_mono
-from backend.audio_analysis.gemini_api import gemini_insights
-from backend.deepfake_model.deepfake_image_check import check_deepfake_image
+from audio_analysis.aud import add_noise_to_audio, extract_audio, plot_audio_waveforms, replace_audio_in_video
+from audio_analysis.audio_to_gemini_api import compare_transcript
+from audio_analysis.convert import stereo_to_mono
+from audio_analysis.gemini_api import gemini_insights
+from deepfake_model.deepfake_image_check import check_deepfake_image
+from invisible_watermarking.watermark_ocr import create_text_image, embed_watermark_to_video
 from google_video_api.gemini_report_generation import generate_report
 from google_video_api.google_api_video import detect_potential_tampering
 from firestore_connection.firestore     import video_url_to_firestore,temp_video_url_to_firestore
@@ -19,6 +22,9 @@ from controllers.signature_controllers import convert_mp4_to_mkv, download_video
 from google.cloud import storage
 from datetime import timedelta
 logger = logging.getLogger(__name__)
+import random
+from PIL import Image
+import numpy as np
 
 config = {
     'client_id': os.getenv('GOOGLE_CLIENT_ID'),
@@ -45,12 +51,14 @@ def video_url():
     user_dictionary = decoded_token.get('user')
     email = user_dictionary.get('email')
     name = user_dictionary.get('name')
+    code=generate_random_code()
     video_struct = {
         "email" :email,
         "title":title,
         "imageUrl":imageUrl,
         "videoUrl":videoUrl,
-        "date":date
+        "date":date,
+        # "code":code
     }
     user_data = {
         "email":email,
@@ -60,8 +68,9 @@ def video_url():
     video_ref = video_url_to_firestore()
     video_ref.document(id).set(video_struct)
     print("ye lo tumhare upload signed video function ke arguments",user_data,videoUrl)
+    embed_watermark(code,videoUrl)
     add_noise_to_video(videoUrl)
-    already_uploaded = upload_signed_video(user_data,videoUrl)
+    already_uploaded = upload_signed_video(user_data,videoUrl,code)
     if already_uploaded == True:
         return jsonify({"status": "failure", "message": "Video already uploaded"}), 200
     elif already_uploaded == False:
@@ -137,17 +146,6 @@ def test_video():
     id = str(uuid.uuid4())
     video_ref = video_url_to_firestore()
     video_ref.document(id).set(video_struct)
-    def deepfake_checking(frames):
-        deepfake_report=0
-        deepfake_check_array=[]  #  array to store result of each frame
-        for _ in frames:
-            deepfake_check_array.append(check_deepfake_image(_))
-        real=fake=0
-        for _ in deepfake_check_array:
-            if _:real+=1
-            else:fake+=1
-        deepfake_report=fake/(real+fake) #  % changes of being fake
-        return deepfake_report
 
     # message = {
     #     'Signature verification result': signature_verification_result,
@@ -156,7 +154,7 @@ def test_video():
     #     'Audio similarity percentage':similarity_percentage,
     #     '% deepfake chances':deepfake_report
     # }
-    signature_verification_result,original_video_url,is_video,frames=verify_signed_video(videoUrl)
+    watermark_verification_result,signature_verification_result,original_video_url,is_video,frames=verify_signed_video(videoUrl)
     if is_video:
         signedUrl=upload_to_google_bucket(videoUrl)
         print("ye lo tumhari signedUrl",signedUrl)
@@ -165,6 +163,7 @@ def test_video():
         video_intelligence_report=generate_report(tampering_detection_result)
         deepfake_value=deepfake_checking(frames)
         message = {
+            'Watermark verification result':watermark_verification_result,
             'Signature verification result': signature_verification_result,
             'Tampering detection result': video_intelligence_report,
             'Audio analysis result':audio_analysis_report,
@@ -266,4 +265,52 @@ def audio_analysis(test_video_url,original_video_url):
     os.remove(graph)
     return report,similarity_percentage
 
+def deepfake_checking(frames):
+    deepfake_report=0
+    deepfake_check_array=[]  #  array to store result of each frame
+    for _ in frames:
+        _=convert_frame_to_pil(_)
+        deepfake_check_array.append(check_deepfake_image(_))
+    real=fake=0
+    for _ in deepfake_check_array:
+        if _:real+=1
+        else:fake+=1
+    deepfake_report=fake/(real+fake) #  % changes of being fake
+    return deepfake_report
 
+def convert_frame_to_pil(frame):
+    if isinstance(frame, np.ndarray):
+        return Image.fromarray(frame)
+    return frame
+
+def generate_random_code():
+    code = ' '.join(random.choices('0123456789', k=8))
+    return code
+
+def embed_watermark(code,video_url):
+    local_video_path="local_video_watermark.mkv"
+    local_video_path_converted='local_video_watermark.mp4'
+    output_video_path="output_video_watermark.mp4"
+    output_video_path_converted='output_video_watermark.mkv'
+    watermark_image="watermark_image.jpeg"
+    print("ye hai tumhara code",code)
+    img=create_text_image(code,200,100)
+    cv2.imwrite(watermark_image, img)
+    download_video(video_url,local_video_path)
+    ffmpeg.input(local_video_path).output(local_video_path_converted).run()
+    video = cv2.VideoCapture(local_video_path_converted)
+    fps = video.get(cv2.CAP_PROP_FPS)
+    total_frames = video.get(cv2.CAP_PROP_FRAME_COUNT)
+    duration = total_frames // fps if fps > 0 else 0
+    video.release()
+    embed_watermark_to_video(local_video_path_converted,output_video_path,watermark_image,duration,fps)
+    ffmpeg.input(output_video_path).output(output_video_path_converted).run()
+    split_url=video_url.split("/")
+    remote_file=split_url[len(split_url)-1]
+    update_video_on_supabase(output_video_path_converted,remote_file)
+    # os.remove(local_video_path)
+    os.remove(output_video_path)
+    os.remove(output_video_path_converted)
+    # os.remove(watermark_image)
+
+        

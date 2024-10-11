@@ -10,4 +10,6 @@ b27project-e4206a0ff48a.json
 __pycache__
 local_video_sign.mkv
 local_video.mkv
-
+local_video_check.mkv
+compression/
+temp_frames/

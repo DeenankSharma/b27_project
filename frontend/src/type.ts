@@ -1,4 +1,5 @@
 export type Report = {
+    'Watermark verification result':string,
     'Signature verification result': string,
     'Tampering Detection result': VideoTamperingDetectionReport,
     'Audio analysis result':string,
@@ -7,6 +8,7 @@ export type Report = {
 }
 
 export type Shorts_Report = {
+  'Watermark verification result':string,
   'Signature verification result': string,
   'Tampering Detection result': VideoTamperingDetectionReport,
   'deepfake chances' : number, 
