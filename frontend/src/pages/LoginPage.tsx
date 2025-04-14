@@ -63,6 +63,7 @@ const LoginPage: React.FC = () => {
       console.error(err);
     }
   };
+  
 
   const to_video_check = () => {
     navigate("/video_check");

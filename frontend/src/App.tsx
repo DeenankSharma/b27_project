@@ -14,7 +14,8 @@ const App: React.FC = () => {
         <BrowserRouter>
             <Routes>
             <Route element={<LoginPage />} path='/' />
-            <Route element={loggedIn ? <Home /> : <Navigate to="/"/>} path="/home" /> 
+            {/* <Route element={loggedIn ? <Home /> : <Navigate to="/"/>} path="/home" />  */}
+            <Route element={<Home />} path="/home" /> 
             <Route element={<Callback />} path='/auth/callback' />
             <Route element={<VideoCheck />} path='/video_check'/>
             </Routes>
