@@ -10,68 +10,70 @@ import DriveFolderUploadIcon from '@mui/icons-material/DriveFolderUpload';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import Dashboard from './Dashboard';
 import { useSidebarContext } from '../context/TabContext.tsx';
+import { useMediaQuery, useTheme } from '@mui/material';
 
 export default function StyledDrawer() {
-  const [open, setOpen] = React.useState(true);
-  const { selectedItem, updateSelectedItem } = useSidebarContext();
+  const { selectedItem, updateSelectedItem, sidebarOpen, toggleSidebar } = useSidebarContext();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   
   const DrawerList = (
     <Box 
       sx={{ 
         width: 250, 
         height: '100%',
-        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        backgroundColor: 'rgba(18, 18, 18, 0.95)',
         backdropFilter: 'blur(10px)',
-        boxShadow: '0 0 20px 5px rgba(0, 237, 100, 0.2)',
         display: 'flex',
         flexDirection: 'column',
-        borderRight: '1px solid rgba(0, 237, 100, 0.2)',
+        borderRight: '1px solid rgba(0, 237, 100, 0.1)',
+        position: 'relative',
+        overflow: 'hidden',
       }} 
       role="presentation"
     >
       <Box sx={{ 
-        padding: '30px 0 20px',
+        padding: '20px 15px',
         borderBottom: '1px solid rgba(0, 237, 100, 0.1)',
       }}>
         <h2 style={{
           color: 'white',
-          textAlign: 'center',
-          fontSize: "2.5rem",
+          fontSize: "1.5rem",
           fontFamily: "Space Grotesk, sans-serif",
           fontWeight: "700",
           margin: 0,
           letterSpacing: '-0.5px',
         }}>
-          <span style={{ color:"#00ED64" }}>Vid</span>Trust
+          <span style={{ color:"#00ED64" }}>Trust</span>Vid
         </h2>
       </Box>
       
       <List sx={{ 
         flexGrow: 1, 
-        padding: '20px 0',
+        padding: '15px 0',
+        overflowY: 'auto',
       }}>
         {[
           { text: 'Upload Videos', icon: <DriveFolderUploadIcon /> },
-          { text: 'Existing Videos', icon: <VideoLibraryIcon /> }
+          { text: 'Video Library', icon: <VideoLibraryIcon /> }
         ].map((item, index) => (
           <ListItem key={item.text} disablePadding sx={{ mb: 1 }}>
             <ListItemButton 
               onClick={() => updateSelectedItem(index)}
               sx={{
-                margin: '0 10px',
+                margin: '0 8px',
                 borderRadius: '8px',
-                padding: '10px 16px',
+                padding: '10px 12px',
                 backgroundColor: selectedItem === index ? 'rgba(0, 237, 100, 0.15)' : 'transparent',
-                transition: 'all 0.2s ease',
+                transition: 'all 0.3s ease',
                 '&:hover': {
-                  backgroundColor: 'rgba(0, 237, 100, 0.1)',
-                  transform: 'translateX(5px)',
+                  backgroundColor: selectedItem === index ? 'rgba(0, 237, 100, 0.2)' : 'rgba(0, 237, 100, 0.1)',
                 },
               }}
             >
               <ListItemIcon sx={{ 
-                color: selectedItem === index ? '#00ED64' : 'rgba(0, 237, 100, 0.7)',
-                minWidth: '40px',
+                color: selectedItem === index ? '#00ED64' : 'rgba(255, 255, 255, 0.7)',
+                minWidth: '35px',
               }}>
                 {item.icon}
               </ListItemIcon>
@@ -79,10 +81,13 @@ export default function StyledDrawer() {
                 primary={item.text} 
                 sx={{ 
                   '& .MuiListItemText-primary': {
-                    color: 'white',
+                    color: selectedItem === index ? '#00ED64' : 'white',
                     fontFamily: 'Space Grotesk, sans-serif',
-                    fontWeight: 500,
-                    fontSize: '1rem',
+                    fontWeight: selectedItem === index ? 600 : 400,
+                    fontSize: '0.9rem',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
                   }
                 }}
               />
@@ -91,27 +96,36 @@ export default function StyledDrawer() {
         ))}
       </List>
       
-      <Box sx={{ p: 2 }}>
+      <Box sx={{ 
+        p: 2, 
+        mt: 'auto',
+        borderTop: '1px solid rgba(0, 237, 100, 0.1)',
+        width: '100%',
+        boxSizing: 'border-box',
+      }}>
         <Dashboard />
       </Box>
     </Box>
   );
 
   return (
-    <div>
-      <Drawer 
-        open={open}
-        variant="persistent"
-        PaperProps={{
-          sx: {
-            backgroundColor: 'transparent',
-            boxShadow: 'none',
-            width: 250,
-          }
-        }}
-      >
-        {DrawerList}
-      </Drawer>
-    </div>
+    <Drawer 
+      open={sidebarOpen}
+      variant={isMobile ? "temporary" : "persistent"}
+      onClose={toggleSidebar}
+      PaperProps={{
+        sx: {
+          backgroundColor: 'transparent',
+          boxShadow: 'none',
+          width: 250,
+          border: 'none',
+        }
+      }}
+      ModalProps={{
+        keepMounted: true,
+      }}
+    >
+      {DrawerList}
+    </Drawer>
   );
 }
