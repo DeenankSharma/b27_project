@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const Dashboard: React.FC = () => {
   const { loggedIn, checkLoginState, user } = useAuth();
@@ -25,75 +26,86 @@ const Dashboard: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: '20px',
-        backgroundColor: 'rgba(0, 0, 0, 0.2)',
-        borderRadius: '15px',
-        boxShadow: '0 0 10px 5px rgba(0, 237, 100, 0.3)',
+        padding: '15px',
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        borderRadius: '12px',
         backdropFilter: 'blur(5px)',
+        border: '1px solid rgba(0, 237, 100, 0.1)',
+        width: '100%',
+        maxWidth: '100%',
+        boxSizing: 'border-box',
+        overflow: 'hidden',
       }}
     >
+      <Avatar
+        src={user?.picture}
+        alt={user?.name}
+        sx={{
+          width: 60,
+          height: 60,
+          border: '2px solid #00ED64',
+          boxShadow: '0 0 10px rgba(0, 237, 100, 0.3)',
+        }}
+      />
+      
       <Typography
         variant="h6"
         sx={{
           color: 'white',
           fontFamily: 'Space Grotesk, sans-serif',
-          fontWeight: 700,
-          marginBottom: '20px',
-
-        }}
-      >
-        Dashboard
-      </Typography>
-      
-      <Avatar
-        src={user?.picture}
-        alt={user?.name}
-        sx={{
-          width: 100,
-          height: 100,
-          marginBottom: '15px',
-          border: '3px solid #00ED64',
-          boxShadow: '0 0 10px rgba(0, 237, 100, 0.5)',
-        }}
-      />
-      
-      <Typography
-        variant="h5"
-        sx={{
-          color: '#00ED64',
-          fontFamily: 'Space Grotesk, sans-serif',
           fontWeight: 600,
-          marginBottom: '5px',
+          fontSize: '1rem',
+          mt: 1.5,
+          mb: 0.5,
+          textAlign: 'center',
+          width: '100%',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
         }}
       >
-        {user?.name.split(" ")[0]}
+        {user?.name}
       </Typography>
       
       <Typography
-        variant="body1"
+        variant="body2"
         sx={{
-          color: 'white',
-          fontFamily: 'Space Grotesk, sans-serif',
-          marginBottom: '20px',
+          color: 'rgba(255, 255, 255, 0.7)',
+          fontFamily: 'Roboto, sans-serif',
+          mb: 2,
+          fontSize: '0.75rem',
+          textAlign: 'center',
+          width: '100%',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
         }}
       >
-        {user?.email.split('@')[0]}
+        {user?.email}
       </Typography>
       
       <Button
-        variant="contained"
+        variant="outlined"
+        startIcon={<LogoutIcon />}
         onClick={handleLogout}
+        size="small"
         sx={{
-          backgroundColor: '#00ED64',
-          color: 'black',
+          color: '#00ED64',
+          borderColor: 'rgba(0, 237, 100, 0.5)',
           fontFamily: 'Space Grotesk, sans-serif',
-          fontWeight: 600,
+          fontWeight: 500,
+          fontSize: '0.75rem',
+          padding: '4px 12px',
+          borderRadius: '8px',
+          textTransform: 'none',
+          maxWidth: '100%',
           '&:hover': {
-            backgroundColor: 'rgba(0, 237, 100, 0.8)',
+            backgroundColor: 'rgba(0, 237, 100, 0.1)',
+            borderColor: '#00ED64',
           },
         }}
       >
-        Logout
+        Sign Out
       </Button>
     </Box>
   );
