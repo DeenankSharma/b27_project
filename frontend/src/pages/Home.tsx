@@ -205,7 +205,6 @@ const Home: React.FC = () => {
               flexGrow: 1,
               display: 'flex',
               justifyContent: 'center',
-              alignItems: 'flex-start',
               width: '100%',
               p: { xs: 2, sm: 3 },
               borderRadius: '12px',
@@ -217,7 +216,16 @@ const Home: React.FC = () => {
               minHeight: '400px',
               maxWidth: '100%',
             }}>
-              {selectedItem === 0 ? <UploadVideoToS3WithNativeSdk /> : <VideosFetch />}
+              <Box sx={{ 
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                flexDirection: 'column',
+                padding: 0,
+                margin: 0
+              }}>
+                {selectedItem === 0 ? <UploadVideoToS3WithNativeSdk /> : <VideosFetch />}
+              </Box>
             </Paper>
           </Fade>
           

@@ -40,7 +40,15 @@ const VideosFetch: React.FC = () => {
   };
 
   return (
-    <div style={styles.container}>
+    <div style={{
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      padding: '0',
+      margin: '0',
+      boxSizing: 'border-box'
+    }}>
       {isVideoPlaying && selectedVideo && (
         <div style={styles.overlay}>
           <div style={styles.modalContent}>
@@ -65,7 +73,15 @@ const VideosFetch: React.FC = () => {
         </div>
       )}
 
-      <div style={styles.grid}>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+        gap: '20px',
+        width: '100%',
+        padding: '0',
+        margin: '0',
+        boxSizing: 'border-box'
+      }}>
         {urls.map((video) => (
           <div key={video.id} style={styles.card}>
             <div style={{...styles.thumbnail, backgroundImage: `url(${video.imageUrl})`}} />
@@ -87,114 +103,105 @@ const VideosFetch: React.FC = () => {
 };
 
 const styles = {
-  container: {
-    position : 'absolute' as const,
-    right:0,
-    top:0,
-    left:250,
-    display: 'flex',
-    flexDirection: 'column' as const,
-    alignItems: 'center',
-    padding: '40px',
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
-    borderRadius: '15px',
-    boxShadow: '0 0 10px 5px rgba(0, 237, 100, 0.3)',
-    backdropFilter: 'blur(5px)',
-    maxWidth: '1150px',
-    margin: '0 auto',
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-    gap: '20px',
-    width: '100%',
-  },
-  card: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: '8px',
-    overflow: 'hidden',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-  },
-  thumbnail: {
-    width: '100%',
-    height: '200px',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-  },
-  cardContent: {
-    padding: '15px',
-  },
-  cardTitle: {
-    fontSize: '18px',
-    fontWeight: 'bold',
-    marginBottom: '10px',
-    whiteSpace: 'nowrap' as const,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    color: 'white',
-    fontFamily: 'Space Grotesk, sans-serif',
-  },
-  playButton: {
-    backgroundColor: '#00ED64',
-    color: 'black',
-    padding: '8px 16px',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontSize: '14px',
-    fontWeight: 'bold',
-    transition: 'background-color 0.3s',
-  },
+  // Keep the rest of the styles as they are
   overlay: {
-    position: 'fixed' as const,
+    position: 'fixed' as 'fixed',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 1000,
+    backdropFilter: 'blur(5px)',
   },
   modalContent: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(18, 18, 18, 0.95)',
+    borderRadius: '12px',
     padding: '20px',
-    borderRadius: '8px',
-    maxWidth: '80%',
-    width: '800px',
-    boxShadow: '0 0 10px 5px rgba(0, 237, 100, 0.3)',
+    maxWidth: '90%',
+    maxHeight: '90%',
+    display: 'flex',
+    flexDirection: 'column' as 'column',
+    alignItems: 'center',
+    border: '1px solid rgba(0, 237, 100, 0.3)',
+    boxShadow: '0 0 20px rgba(0, 237, 100, 0.2)',
   },
   videoWrapper: {
-    position: 'relative' as const,
-    paddingTop: '56.25%', 
+    width: '100%',
+    maxWidth: '800px',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    marginBottom: '15px',
   },
   video: {
-    position: 'absolute' as const,
-    top: 0,
-    left: 0,
     width: '100%',
-    height: '100%',
+    display: 'block',
   },
   modalTitle: {
-    fontSize: '24px',
-    fontWeight: 'bold',
-    marginTop: '15px',
-    marginBottom: '15px',
     color: 'white',
+    margin: '0 0 15px 0',
     fontFamily: 'Space Grotesk, sans-serif',
+    fontSize: '1.5rem',
   },
   closeButton: {
-    backgroundColor: '#00ED64',
-    color: 'black',
-    padding: '10px 20px',
-    border: 'none',
+    backgroundColor: 'rgba(0, 237, 100, 0.2)',
+    color: '#00ED64',
+    border: '1px solid #00ED64',
+    padding: '8px 16px',
     borderRadius: '4px',
     cursor: 'pointer',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    transition: 'background-color 0.3s',
+    fontFamily: 'Space Grotesk, sans-serif',
+    transition: 'all 0.3s ease',
   },
+  card: {
+    backgroundColor: 'rgba(18, 18, 18, 0.7)',
+    borderRadius: '12px',
+    overflow: 'hidden',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+    cursor: 'pointer',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column' as 'column',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+  },
+  thumbnail: {
+    width: '100%',
+    height: '160px',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+  },
+  cardContent: {
+    padding: '15px',
+    display: 'flex',
+    flexDirection: 'column' as 'column',
+    flexGrow: 1,
+  },
+  cardTitle: {
+    color: 'white',
+    margin: '0 0 10px 0',
+    fontFamily: 'Space Grotesk, sans-serif',
+    fontSize: '1rem',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap' as 'nowrap',
+  },
+  playButton: {
+    backgroundColor: 'rgba(0, 237, 100, 0.2)',
+    color: '#00ED64',
+    border: '1px solid #00ED64',
+    padding: '8px 0',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    marginTop: 'auto',
+    marginBottom: '10px',
+    fontFamily: 'Space Grotesk, sans-serif',
+    transition: 'all 0.3s ease',
+  }
 };
 
 export default VideosFetch;
