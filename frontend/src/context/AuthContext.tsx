@@ -15,20 +15,18 @@ interface AuthContextProviderProps {
 }
 
 export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
-  // const [loggedIn, setLoggedIn] = useState<boolean | null>(null);/
-  const [loggedIn, setLoggedIn] = useState<boolean | null>(true);
+  const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
   const [user, setUser] = useState<any>(null);
 
   const checkLoginState = useCallback(async () => {
     try {
-      // const {
-      //   data: { loggedIn: logged_in, user },
-      // } = await axios.get(`${serverUrl}/auth/logged_in`);
-      // setLoggedIn(logged_in);
-      // if (user) {
-      //   setUser(user);
-      // }/
-      setLoggedIn(true);
+      const {
+        data: { loggedIn: logged_in, user },
+      } = await axios.get(`${serverUrl}/auth/logged_in`);
+      setLoggedIn(logged_in);
+      if (user) {
+        setUser(user);
+      }
     } catch (err) {
       console.error(err);
     }

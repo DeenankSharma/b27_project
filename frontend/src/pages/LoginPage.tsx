@@ -402,7 +402,7 @@ const LoginPage: React.FC = () => {
               <div className="testimonial-author" style={{
                 fontSize: isMobile ? "0.8rem" : "0.9rem"
               }}>
-                — Deenank Sharma, Developer
+                — Satoshi, Youtuber
               </div>
             </div>
           </Card>

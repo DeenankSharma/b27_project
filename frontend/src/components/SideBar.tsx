@@ -38,9 +38,9 @@ export default function StyledDrawer() {
       }}>
         <h2 style={{
           color: 'white',
-          fontSize: "1.5rem",
+          fontSize: "2rem",
           fontFamily: "Space Grotesk, sans-serif",
-          fontWeight: "700",
+          fontWeight: "800",
           margin: 0,
           letterSpacing: '-0.5px',
         }}>

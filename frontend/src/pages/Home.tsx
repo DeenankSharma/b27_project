@@ -13,10 +13,11 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 const Home: React.FC = () => {
   const { loggedIn, user } = useAuth();
+  console.log( `ye le ${user}`)
   const { selectedItem, sidebarOpen, toggleSidebar } = useSidebarContext();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
+  console.log(`haa bahi ${loggedIn}`)
   if (loggedIn === true) {
     return (
       <Box sx={{ 
@@ -71,6 +72,7 @@ const Home: React.FC = () => {
           maxWidth: '100%',
           boxSizing: 'border-box',
           position: 'relative',
+          // top:0,
           zIndex: 1,
           overflowX: 'hidden',
         }}>
@@ -78,6 +80,7 @@ const Home: React.FC = () => {
           <Fade in={true} timeout={800}>
             <Paper elevation={0} sx={{
               mb: 3,
+              mt:30,
               p: { xs: 2, sm: 3 },
               borderRadius: '12px',
               background: 'rgba(255,255,255,0.03)',
@@ -92,6 +95,7 @@ const Home: React.FC = () => {
                 <Typography 
                   variant="h6" 
                   sx={{ 
+                    // marginTop:150,
                     color: 'rgba(255,255,255,0.7)',
                     fontFamily: 'Space Grotesk, sans-serif',
                     mb: 1,
@@ -207,7 +211,8 @@ const Home: React.FC = () => {
               justifyContent: 'center',
               alignItems: 'flex-start',
               width: '100%',
-              p: { xs: 2, sm: 3 },
+              p: { xs: 2, sm: 3 ,lg:5},
+              // pt:4,
               borderRadius: '12px',
               background: 'rgba(255,255,255,0.02)',
               backdropFilter: 'blur(10px)',
