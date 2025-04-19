@@ -1,4 +1,4 @@
-from moviepy.editor import VideoFileClip
+from moviepy import VideoFileClip
 import numpy as np
 from pydub import AudioSegment
 from opensimplex import OpenSimplex

@@ -14,10 +14,7 @@ import StarIcon from '@mui/icons-material/Star';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
-import HomeIcon from '@mui/icons-material/Home';
-import InfoIcon from '@mui/icons-material/Info';
-import ContactSupportIcon from '@mui/icons-material/ContactSupport';
-import PriceCheckIcon from '@mui/icons-material/PriceCheck';
+
 
 import "./LoginPage.css";
 
@@ -75,14 +72,14 @@ const LoginPage: React.FC = () => {
   
   return (
     <>
-      <div className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
-        <div className="navbar-container">
-          <div className="navbar-logo">
-            <div className="logo-icon">TV</div>
-            <div className="logo-text">TrustVid</div>
+      <div  className={`px-0 navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
+        <div className="navbar-container" style={{"justifyContent":"space-between"}}>
+          <div  className="navbar-logo">
+            <div className="logo-icon">VT</div>
+            <div className="logo-text">VidTrust</div>
           </div>
           
-          <div className="navbar-links-desktop">
+          {/* <div className="navbar-links-desktop">
             <a href="#" className="navbar-link active">
               <HomeIcon fontSize="small" style={{ marginRight: '5px' }} />
               Home
@@ -100,7 +97,7 @@ const LoginPage: React.FC = () => {
               Contact
             </a>
           </div>
-          
+           */}
           <div className="navbar-actions">
             <Button 
               variant="outlined" 
@@ -133,7 +130,7 @@ const LoginPage: React.FC = () => {
           </div>
         </div>
         
-        <div ref={menuRef} className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
+        {/* <div ref={menuRef} className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
           <div className="mobile-menu-links">
             <a href="#" className="mobile-menu-link active">
               <HomeIcon fontSize="small" style={{ marginRight: '10px' }} />
@@ -179,7 +176,7 @@ const LoginPage: React.FC = () => {
               </Button>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
       {/* animationnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn */}
       <div className='main_div'>
@@ -189,7 +186,7 @@ const LoginPage: React.FC = () => {
         
         <div className='left'>
           <div className='heading'>
-            TrustVid
+            VidTrust
           </div>
           <div className='motto'>
             Your <span>Content</span> now <span>Authenticated</span>
@@ -204,45 +201,43 @@ const LoginPage: React.FC = () => {
             width: '100%',
             boxSizing: 'border-box'
           }}>
-            TrustVid is a revolutionary platform that ensures the authenticity of your video content using 
-            blockchain technology. Protect your intellectual property and build trust with your audience.
+            VidTrust is a revolutionary platform that ensures the authenticity of your video content Protect your intellectual property and build trust with your audience.
           </p>
           
           <div className="features">
             <div className="feature-item">
-              <div className="feature-title">
-                <SecurityIcon style={{ marginRight: '8px', fontSize: isMobile ? '1rem' : '1.2rem' }} />
-                Secure Authentication
+              <div style={{"marginRight":"5px"}} className="feature-title">
+                <SecurityIcon style={{ marginRight: '8px', fontSize: isMobile ? '2rem' : '2rem' }} />
+               
               </div>
-              <div className="feature-desc">
+              <div className="feature-desc" >
                 Our platform uses advanced encryption to ensure your content remains secure and tamper-proof.
               </div>
             </div>
             
             <div className="feature-item">
               <div className="feature-title">
-                <MovieIcon style={{ marginRight: '8px', fontSize: isMobile ? '1rem' : '1.2rem' }} />
-                Content Verification
+                <MovieIcon style={{ marginRight: '8px', fontSize: isMobile ? '2rem' : '2rem' }} />
               </div>
               <div className="feature-desc">
-                Verify the authenticity of any video with our proprietary verification system.
+                Verify the authenticity of any video with our verification system.
               </div>
             </div>
             
             <div className="feature-item">
               <div className="feature-title">
-                <EnhancedEncryptionIcon style={{ marginRight: '8px', fontSize: isMobile ? '1rem' : '1.2rem' }} />
-                Blockchain Technology
+                <EnhancedEncryptionIcon style={{ marginRight: '8px', fontSize: isMobile ? '2rem' : '2rem' }} />
+                
               </div>
               <div className="feature-desc">
-                Leverage the power of blockchain to create immutable records of your content ownership.
+                Leverage the power of watermarking, frame-splicing and much more
               </div>
             </div>
             
             <div className="feature-item">
               <div className="feature-title">
-                <VerifiedUserIcon style={{ marginRight: '8px', fontSize: isMobile ? '1rem' : '1.2rem' }} />
-                Creator Protection
+                <VerifiedUserIcon style={{ marginRight: '8px', fontSize: isMobile ? '2rem' : '2rem' }} />
+               
               </div>
               <div className="feature-desc">
                 Protect your intellectual property and ensure proper attribution for your creative work.
@@ -402,7 +397,7 @@ const LoginPage: React.FC = () => {
                 fontSize: isMobile ? "0.8rem" : "0.9rem",
                 lineHeight: isMobile ? "1.4" : "1.5"
               }}>
-                "TrustVid has completely transformed how I protect my content. The authentication process is seamless and gives me peace of mind."
+                "VidTrust has completely transformed how I protect my content. The authentication process is seamless and gives me peace of mind."
               </div>
               <div className="testimonial-author" style={{
                 fontSize: isMobile ? "0.8rem" : "0.9rem"

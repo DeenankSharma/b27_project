@@ -11,6 +11,7 @@ import sys
 import requests
 from supabase import create_client,Client
 import subprocess
+from typing import List
 from dotenv import load_dotenv
 import zlib
 load_dotenv()
@@ -267,7 +268,7 @@ def verify_signed_video(video_url):
     # Check if it's a short clip
     is_short_clip = metadata['tags']['DURATION'] < metadata_original['tags']['DURATION']
     if is_short_clip:
-        signature_verification_result = verify_shorts(local_video_path, public_key, signature, user_data, metadata, metadata_original)
+        # signature_verification_result = verify_shorts(local_video_path, public_key, signature, user_data, metadata, metadata_original)
         is_video = False
     else:
         
@@ -278,16 +279,16 @@ def verify_signed_video(video_url):
         is_video = True
     os.remove(local_video_path)
     return signature_verification_result, original_video_url, is_video, frames
-def verify_shorts(local_video_path, public_key, signature, user_data, metadata, metadata_original):
-    watermark = extract_watermark(local_video_path)
-    is_signature_valid = verify_watermark_signature(watermark, signature, public_key)
-    is_metadata_consistent = check_metadata_consistency(metadata, metadata_original)
-    verification_result = {
-        "signature_valid": is_signature_valid,
-        "metadata_consistent": is_metadata_consistent,
-        "overall_result": is_signature_valid and is_metadata_consistent
-    }
-    return verification_result
+# def verify_shorts(local_video_path, public_key, signature, user_data, metadata, metadata_original):
+#     # watermark = extract_watermark(local_video_path)
+#     # is_signature_valid = verify_watermark_signature(watermark, signature, public_key)
+#     # is_metadata_consistent = check_metadata_consistency(metadata, metadata_original)
+#     # verification_result = {
+#     #     "signature_valid": is_signature_valid,
+#     #     "metadata_consistent": is_metadata_consistent,
+#     #     "overall_result": is_signature_valid and is_metadata_consistent
+#     # }
+#     return verification_result
 
 
 def convert_mp4_to_mkv(video_url,input_file, output_file):

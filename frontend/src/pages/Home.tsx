@@ -191,7 +191,7 @@ const Home: React.FC = () => {
                     }}
                   >
                     {selectedItem === 0 
-                      ? 'Share your content securely with TrustVid technology' 
+                      ? 'Share your content securely with VidTrust technology' 
                       : 'Manage and view your uploaded videos'}
                   </Typography>
                 </Box>
@@ -231,7 +231,7 @@ const Home: React.FC = () => {
             width: '100%',
             pb: 2,
           }}>
-            TrustVid © {new Date().getFullYear()} | Secure Video Authentication Platform
+            VidTrust © {new Date().getFullYear()} | Secure Video Authentication Platform
           </Box>
         </Box>
       </Box>
