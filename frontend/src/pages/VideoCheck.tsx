@@ -162,7 +162,7 @@ const VideoCheck: React.FC = () => {
   // Main render
   return (
     <Fade in={pageLoaded} timeout={800}>
-      <Container maxWidth="lg" className="video-check-container">
+      <Container style={{"paddingTop":"100px"}} maxWidth="lg" className="video-check-container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -173,6 +173,7 @@ const VideoCheck: React.FC = () => {
             handleBackToHome={handleBackToHome} 
             showHelp={showHelp}
             setShowHelp={setShowHelp}
+            
           />
           
           <Box sx={{ mb: 3 }}>

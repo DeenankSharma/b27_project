@@ -12,3 +12,7 @@ body{
 ::-webkit-scrollbar{
   di
 } */
+
+::-webkit-scrollbar{
+  display: none;
+}

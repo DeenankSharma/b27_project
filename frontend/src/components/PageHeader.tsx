@@ -23,9 +23,9 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           onClick={handleBackToHome}
           className="back-button"
         >
-          <ArrowBackIcon sx={{ color: '#00ED64' }} />
+          <ArrowBackIcon sx={{fontSize: { xs: '1.5rem', sm: '2rem', md: '2.125rem' }, color: '#00ED64' }} />
         </IconButton>
-        <Typography variant="h4" className="page-title" sx={{ fontSize: { xs: '1.5rem', sm: '2rem', md: '2.125rem' } }}>
+        <Typography style={{"fontWeight":"bold"}} variant="h4" className="page-title" sx={{ fontSize: { xs: '1.5rem', sm: '2rem', md: '2.125rem' } }}>
           {title}
         </Typography>
       </Box>
